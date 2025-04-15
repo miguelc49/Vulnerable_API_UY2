@@ -1,0 +1,132 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Vulnerable Flask App",
+    "version": "1.0.0",
+    "description": "This API is designed for AppSec testing. Includes intentional vulnerabilities and security misconfigurations."
+  },
+  "paths": {
+    "/login": {
+      "post": {
+        "summary": "Login",
+        "description": "Dummy login to return a JWT token.",
+        "tags": ["auth"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["username", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "JWT token returned",
+            "content": {
+              "application/json": {
+                "example": {
+                  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI..."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
+        }
+      }
+    },
+    "/public/hello": {
+      "get": {
+        "summary": "Hello World",
+        "description": "Simple public endpoint for testing.",
+        "tags": ["public"],
+        "responses": {
+          "200": {
+            "description": "Returns greeting",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Hello from public endpoint!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vuln/dependency": {
+      "get": {
+        "summary": "Vulnerable Dependency Usage",
+        "description": "Endpoint that uses a vulnerable dependency (e.g., outdated PyYAML).",
+        "tags": ["vulnerabilities"],
+        "responses": {
+          "200": {
+            "description": "Returns parsed YAML content (unsafe)",
+            "content": {
+              "application/json": {
+                "example": {
+                  "result": "Parsed YAML content"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/secret": {
+      "get": {
+        "summary": "Protected Secret Endpoint",
+        "description": "Returns secret data. Requires a valid JWT token in the Authorization header.",
+        "tags": ["secret"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Secret data returned successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Welcome admin, here is your secret data!"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized or invalid token",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Invalid or expired token!"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
