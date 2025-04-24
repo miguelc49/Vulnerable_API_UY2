@@ -90,6 +90,22 @@ def xss():
     user_input = request.args.get('input')
     return f"<h1>{user_input}</h1>"
 
+def xss2():
+    """
+    Endpoint vulnerable to XSS
+    ---
+    parameters:
+      - name: input
+        in: query
+        type: string
+        required: true
+    responses:
+      200:
+        description: Returns the input
+    """
+    user_input = request.args.get('input')
+    return f"<h1>{user_input}</h1>"
+
 @app.route('/jwt', methods=['POST'])
 def generate_jwt():
     """
