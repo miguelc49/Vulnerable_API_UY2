@@ -1,4 +1,4 @@
-Flask==2.0.1
+flask==2.3.3
 flasgger==0.9.5
 PyJWT==1.7.1  # Intentionally outdated
 gnureadline==8.1.2 #license issue
